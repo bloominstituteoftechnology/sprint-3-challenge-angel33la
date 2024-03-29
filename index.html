@@ -110,7 +110,7 @@
       //      * When engaging the safety, return "Safety enabled!"
       //      * When disengaging the safety, return "Safety disabled!"
       // 🌟 HINT: instances need to keep track of their maximum capacity as well as their current capacity
-        constructor(totalProjectiles) {
+      constructor(totalProjectiles) {
         this.maxCapacity = totalProjectiles;
         this.currentCapacity = totalProjectiles;
         this.safety = true;
@@ -168,22 +168,22 @@
         this.text = text;
         this.charsPerPage = charsPerPage;
         this.currentPage = 0;
-      
+      }
 
-        this.next = function() {
-          const startIndex = this.currentPage * this.charsPerPage;
-          const endIndex = startIndex + this.charsPerPage;
-          
-          const nextPageText = this.text.slice(startIndex, endIndex);
+      next() {
+        const startIndex = this.currentPage * this.charsPerPage;
+        const endIndex = startIndex + this.charsPerPage;
 
-          if (nextPageText.length === 0) {
-            return null;
-          }
-          this.page++;
-          return nextPageText;
-            }
-          }
+        const nextPageText = this.text.slice(startIndex, endIndex);
+
+        if (nextPageText === '') {
+          return null;
         }
+        this.currentPage++;
+        return nextPageText;
+      }
+    }
+
 
     // 👉 CHALLENGE 4 AntFarm
     class AntFarm {
@@ -217,36 +217,37 @@
       //      console.log(list) // prints ["a"]
       // 👉 HINT: if you are not feeling confident with map and filter, solve the problem with for loops,
       //      and with the piece of mind of all tests passing, refactor to use map/filter
-        constructor(...antsNames) {
-          this.ants = antsNames.map(name => ({ name, health: 100 }));
-
-          this.work = function () {
-            if (this.ants.length === 0) {
-              return "No ants here. Did you work them to death?";
-            }
-
-            this.ants.forEach(ant => {
-              ant.health -= 20;
-              if (ant.health <= 0) {
-                this.ants = this.ants.filter(a => a !== ant);
-              }
-            });
-
-            return `${this.ants.length} ants starting work!`;
-          }
-
-          this.feed = function (name) {
-            const foundAnt = this.ants.find(ant => ant.name === name);
-            if (foundAnt) {
-              foundAnt.health += 15;
-              return "Yum!";
-            } else {
-              return `${name} not found!`;
-            }
-          }
-
-          }
+      constructor(...antsNames) {
+        this.ants = antsNames.map(name => ({ name, health: 100 }));
+      }
+      work() {
+        const numAnts = this.ants.length;
+        if (this.ants.length === 0) {
+          return "No ants here. Did you work them to death?";
         }
+
+        this.ants = this.ants.map(ant => {
+          ant.health -= 20;
+          return ant
+        }).filter(a => a.health > 0);
+
+        return `${numAnts} ants starting work!`;
+      }
+
+      feed(name) {
+        const foundAnt = this.ants.filter(ant => ant.name === name);
+        if (foundAnt.length > 0) {
+          for (let found of foundAnt) {
+            found.health += 15;
+          }
+          return "Yum!";
+        } else {
+          return `${name} not found!`;
+        }
+      }
+
+    }
+
 
     // 🧪 TESTS, do not make any changes below this line ===================
     // 🧪 TESTS, do not make any changes below this line ===================
